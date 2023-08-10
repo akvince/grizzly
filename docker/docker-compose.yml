@@ -1,0 +1,59 @@
+version: '3.3'
+
+services:
+  php:
+    container_name: grizzly_php
+    build:
+      context: php
+      args:
+        TIMEZONE: ${TIMEZONE}
+    volumes:
+      - resources_grizzly:/var/www/symfony
+      - ./logs/symfony:/var/wwww/symfony/var/log
+    networks:
+      - grizzly_net
+  mysql:
+    container_name: grizzly_mysql
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - resources_grizzly_db:/var/lib/mysql
+    ports:
+      - ${MYSQL_PORT}:3309
+    networks:
+      - grizzly_net
+  nginx:
+    container_name: grizzly_nginx
+    depends_on:
+      - php
+      - mysql
+    build:
+      context: nginx
+      args:
+        MAX_EXECUTION_TIME: ${MAX_EXECUTION_TIME}
+        SERVER_NAME: ${SERVER_NAME}
+    environment:
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
+      - DOMAIN_NAME=${VIRTUAL_HOST}
+    volumes:
+      - resources_grizzly:/var/www/symfony
+      - ./logs/nginx:/var/log/nginx
+    networks:
+      - grizzly_net
+    expose:
+      - 80
+    ports:
+      - "${NGINX_PORT}:80"
+volumes:
+  resources_grizzly_db:
+  resources_grizzly:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/${SYMFONY_APP_PATH}
+      o: bind
+networks:
+  grizzly_net:
