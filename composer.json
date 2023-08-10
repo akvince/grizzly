@@ -1,4 +1,6 @@
 {
+    "name": "grizzly/projet",
+    "description": "grizzly",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
@@ -91,6 +93,8 @@
         }
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.14",
+        "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "6.2.*",
         "symfony/css-selector": "6.2.*",

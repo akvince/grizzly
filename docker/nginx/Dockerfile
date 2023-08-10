@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM nginx
 ARG MAX_EXECUTION_TIME
 ARG SERVER_NAME
 # Install nginx
